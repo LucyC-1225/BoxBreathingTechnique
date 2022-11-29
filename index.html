@@ -1,0 +1,403 @@
+<!-- Blockly demos: https://github.com/google/blockly-samples/tree/master/examples-->
+<!-- 
+Features to be implemented:
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f7f3f2;
+      }
+      .header {
+        height: 10vh;
+        background-color: #6ca395;
+      }
+      #container {
+        display: flex;
+        height: 90vh;
+      }
+      #blocklySection {
+        width: 50%;
+        height: 100%;
+        position: static;
+      }
+      #outputSectionContainer {
+        width: 50%;
+        height: 100%;
+        border-style: none none none solid;
+        text-align: center;
+      }
+      .popup {
+        background: #75c4b0;
+        border-radius: 30px;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.1);
+        position: absolute;
+        padding: 0px 30px 30px;
+        box-shadow: rgba(75, 204, 171, 0.4) -5px 5px, rgba(75, 204, 171, 0.3) -10px 10px, rgba(75, 204, 171, 0.2) -15px 15px, rgba(75, 204, 171, 0.1) -20px 20px, rgba(75, 204, 171, 0.05) -25px 25px;
+        visibility: hidden;
+        transition: transform 0.4s, top 0.4s;
+      }
+      .open-popup {
+        visibility: visible;
+        top: 50%;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      #startButton {
+        cursor: pointer;
+        border-radius: 10px;
+        width: 50%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        font-size: 18px;
+      }
+      .center {
+        text-align: center;
+      }
+      h1, h3{
+        text-align: center;
+      }
+      #aboutButton {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 50%;
+        text-align: center;
+        cursor: pointer;
+      }
+      #outputSection {
+        margin: auto;
+        width: 50vh;
+        height: 50vh;
+        background-color: #f7f3f2;
+        position: relative;
+        border-style: solid;
+        border-color: #75c4b0;
+        border-width: 8px;
+        margin-top: 10%;
+        margin-bottom: 10%;
+      }
+      .object {
+        width: 10%;
+        height: 10%;
+        position: absolute;
+        left: 0px;
+        top: 90%; /*100% height of box - 10% height of object*/
+        transition-duration: 5s;
+      }
+      .moveHorizontal {
+        left: calc(90%);
+      }
+      .moveVertical {
+        top: calc(0%);
+      }
+      .button{
+        font-size: 1rem;
+        text-align: center;
+        color: white;
+        background-color: #27ae60;
+        padding: 0.5rem 1rem 0.5rem 1rem;
+        cursor: pointer;
+        font-weight: bold;
+        margin: 1%;
+      }
+      .button:hover{
+        color: white;
+        border-color: white;
+        background-color: rgb(39, 174, 96, 0.7);
+        transition: 1.5s;
+        font-weight: bold;
+      }
+      h1 {
+        padding: 1%;
+        margin: 0;
+        color: white;
+      }
+      #breathDirections {
+        color: #75c4b0;
+        margin: auto;
+        padding: 45% 0;
+        font-size: 5vh;
+      }
+      #audio {
+        margin: 0px;
+        height: 0px;
+        width: 0px;
+        padding: 0px;
+        position: absolute;
+      }
+      .header h1 {
+        padding: 0;
+        padding-top: 0.5%;
+        font-size: 50px;
+      }
+      #logo {
+        float: right;
+        position: relative;
+        vertical-align: center;
+        top: 15%;
+        height: 70%;
+        margin: 0;
+        padding: 0;
+      }
+      #runButton:disabled {
+        background-color: lightgray;
+        cursor: not-allowed;
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/9.1.0/blockly.min.js"></script>
+    <script>
+      //Define custom Blockly Blocks
+      Blockly.Blocks['inhale'] = {
+      init: function() {
+        this.appendValueInput("numSeconds")
+            .setCheck("Number")
+            .appendField("Inhale")
+            .appendField(new Blockly.FieldNumber(1, 1, 10), "numSeconds")
+            .appendField("seconds");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("");
+        this.setHelpUrl("");
+        }
+      };
+      Blockly.JavaScript['inhale'] = function(block) {
+        number_numseconds = block.getFieldValue('numSeconds');
+        value_numseconds = Blockly.JavaScript.valueToCode(block, 'numSeconds', Blockly.JavaScript.ORDER_ATOMIC);
+        var code = 'console.log(number_numseconds);console.log("Inhale");';
+        return code;
+      };
+      Blockly.Blocks['holdbreath'] = {
+      init: function() {
+        this.appendValueInput("numSeconds")
+            .setCheck("Number")
+            .appendField("Hold Your Breath")
+            .appendField(new Blockly.FieldNumber(0, 1, 10), "numSeconds")
+            .appendField("seconds");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+       this.setTooltip("");
+       this.setHelpUrl("");
+        }
+      };
+      Blockly.JavaScript['holdbreath'] = function(block) {
+        number_numseconds = block.getFieldValue('numSeconds');
+        value_numseconds = Blockly.JavaScript.valueToCode(block, 'numSeconds', Blockly.JavaScript.ORDER_ATOMIC);
+        var code = 'console.log("hold your breath");';
+        return code;
+      };
+      Blockly.Blocks['exhale'] = {
+      init: function() {
+        this.appendValueInput("numSeconds")
+            .setCheck("Number")
+            .appendField("Exhale")
+            .appendField(new Blockly.FieldNumber(0, 1, 10), "numSeconds")
+            .appendField("seconds");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+       this.setTooltip("");
+       this.setHelpUrl("");
+        }
+      };
+      Blockly.JavaScript['exhale'] = function(block) {
+        number_numseconds = block.getFieldValue('numSeconds');
+        value_numseconds = Blockly.JavaScript.valueToCode(block, 'numSeconds', Blockly.JavaScript.ORDER_ATOMIC);
+        var code = 'console.log("exhale");';
+        return code;
+      };
+      Blockly.Blocks['pause'] = {
+        init: function() {
+          this.appendValueInput("numSeconds")
+              .setCheck("Number")
+              .appendField("Pause")
+              .appendField(new Blockly.FieldNumber(0, 1, 10), "numSeconds")
+              .appendField("seconds");
+          this.setPreviousStatement(true, null);
+          this.setNextStatement(true, null);
+          this.setColour(230);
+       this.setTooltip("");
+       this.setHelpUrl("");
+        }
+      };
+      Blockly.JavaScript['pause'] = function(block) {
+        number_numseconds = block.getFieldValue('numSeconds');
+        value_numseconds = Blockly.JavaScript.valueToCode(block, 'numSeconds', Blockly.JavaScript.ORDER_ATOMIC);
+        var code = 'console.log("pause");';
+        return code;
+      };
+      function initialize() {
+        object = document.querySelector(".object");
+        popupTutorial = document.getElementById("popupTutorial");
+        breathDirections = document.getElementById("breathDirections");
+        runButton = document.getElementById("runButton");
+        runButton.innerHTML = "Run Code";
+        openPopup();
+      }
+      function openPopup() {
+        popupTutorial.classList.add("open-popup");
+      }
+      function closePopup() {
+        popupTutorial.classList.remove("open-popup");
+      }
+      function move(number_numseconds, repeat) {
+        console.log("function called");
+        object.style.transitionDuration = number_numseconds + "s";
+        object.classList.toggle("moveVertical");
+        movedHorizontal = false;
+        inhale = false;
+        hold = true;
+        exhale = false;
+        pause = false;
+        currentRepeat = 0;
+        repeats = repeat;
+        breathDirections.innerHTML = "Inhale...";
+        runButton.disabled = true;
+        runButton.innerHTML = "Running...";
+        object.addEventListener("transitionend", changeDirection);
+        console.log("function ended");
+      }
+      function changeDirection() {
+        if (movedHorizontal) {
+          if (inhale) {
+            breathDirections.innerHTML = "Inhale...";
+            inhale = false;
+            hold = true;
+          } else if (exhale) {
+            breathDirections.innerHTML = "Exhale...";
+            exhale = false;
+            pause = true;
+          }
+          currentRepeat++;
+          object.classList.toggle("moveVertical");
+          movedHorizontal = false;
+          //when the loop ends
+          if (currentRepeat == parseInt(repeats) * 4) {
+            alert("Great job! I hope you feel more relaxed!");
+            object.classList.toggle("moveVertical");
+            breathDirections.innerHTML = "";
+            runButton.disabled = false;
+            runButton.innerHTML = "Run Code";
+            object.removeEventListener("transitionend", changeDirection);
+            return "";
+          }
+        } else {
+          if (hold) {
+            breathDirections.innerHTML = "Hold your breath...";
+            hold = false;
+            exhale = true;
+          } else if (pause) {
+            breathDirections.innerHTML = "Pause...";
+            pause = false;
+            inhale = true;
+          }
+          currentRepeat++;
+          object.classList.toggle("moveHorizontal");
+          movedHorizontal = true;
+        }
+      }
+    </script>
+    
+  </head>
+
+  <body onload = "initialize();">
+    <div class = "header">
+      <img id = "logo" src = "/images/wellboticsLogo.png">
+      <h1>The Box Breathing Technique</h1>
+    </div>
+    <!-- Music -->
+    <embed id = "audio" src = "/audio/calmquiet.mp3" loop = "true" hidden="true" autostart = "true">
+    <!-- Blockly Workspace -->
+    <div id = "container">
+      <div id = "blocklySection"></div>
+      <div id = "outputSectionContainer">
+        <button id = "runButton" class = "button" onclick = "runCode();">Run Code</button>
+        <hr>
+        <div id = "outputSection">
+          <img class = "object" src = "https://www.pngall.com/wp-content/uploads/5/Red-Ball-PNG.png">
+          <h3 id = "breathDirections"></h3>
+        </div>
+      </div>
+    </div>
+    
+    <div id = "popupTutorial" class = "popup">
+      <h1>The Box Breathing Technique</h1>
+      <h3>What it is:</h3>
+      <p>Box breathing technique is a relaxation technique that can help you reset your breath when feeling stress or anxiety.</p>
+      
+      <h3>Benefits:</h3>
+      <ul>
+        <li>Reduce stress</li>
+        <li>Improve Mood</li>
+        <li>Help with controlling and managing emotions</li>
+      </ul>
+      
+      <h3>How it works:</h3>
+      <p>Imagine breathing around a box. Inhale as you visualize going up one side of the box. Hold your breath for five seconds as you picture going across the top of the box. Exhale gradually as you imagine traveling down the other side of the box. Hold again as you go along the bottom of the box. Then repeat.</p>
+
+      <div class = "center">
+        <button class = "button" id = "startButton" onclick = "closePopup();">Start</button>
+      </div>
+      
+    </div>
+    
+    <button id = "aboutButton" onclick = "openPopup();">?</button>
+    
+    <!-- Adding the Blockly Blocks -->
+    <xml id="toolbox" style="display: none" xmlns="https://developers.google.com/blockly/xml">
+      <block type="inhale"></block>
+      <block type="holdbreath"></block>
+      <block type="exhale"></block>
+      <block type="pause"></block>
+      <block type="controls_repeat_ext">
+        <value name="TIMES">
+          <shadow type="math_number" id="D]y!VAJj50*L-P_CeGd#">
+            <field name="NUM">10</field>
+          </shadow>
+        </value>
+      </block>
+    </xml>
+    <script>
+      var workspace = Blockly.inject('blocklySection',
+          {toolbox: document.getElementById('toolbox')});
+      Blockly.serialization.workspaces.load(workspace);
+      function runCode() {
+        window.LoopTrap = 1000;
+        Blockly.JavaScript.INFINITE_LOOP_TRAP =
+            'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
+        var code = Blockly.JavaScript.workspaceToCode(workspace);
+        if (!code.includes('console.log("Inhale");console.log("hold your breath");console.log("exhale");console.log("pause");')) {
+          alert("Hmmm...your blocks seem to be out of order. Try again");
+          return "";
+        } else {
+          //get the number of repeats from the loop
+          let repeats = code;
+          repeats = repeats.substring(code.indexOf("<") + 1);
+          repeats = repeats.substring(0, repeats.indexOf(";"));
+          
+          move(number_numseconds, repeats);
+        }
+        Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+        try {
+          eval(code);
+        } catch (e) {
+          alert(e);
+        }
+      }
+    </script>
+    
+  </body>
+</html>
