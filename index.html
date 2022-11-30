@@ -332,12 +332,12 @@ Features to be implemented:
         let musicToggle = document.getElementById("musicToggle");
         let audio = document.getElementById("audio");
         if (soundOn == true) {
-          musicToggle.src = "/images/musicOff.png";
+          musicToggle.src = "musicOff.png";
           soundOn = false;
           audio.pause();
           console.log("soundOn: ", soundOn);
         } else if (soundOn == false) {
-          musicToggle.src = "/images/musicOn.png";
+          musicToggle.src = "musicOn.png";
           soundOn = true;
           audio.play();
           console.log("soundOn: ", soundOn);
@@ -390,7 +390,7 @@ Features to be implemented:
     </div>
     
     <button id = "aboutButton" onclick = "openPopup();">?</button>
-    <a onclick = "toggleSoundOnOff();"><img id = "musicToggle" src = "images/musicOff.png"></a>
+    <a onclick = "toggleSoundOnOff();"><img id = "musicToggle" src = "musicOff.png"></a>
     
     <!-- Adding the Blockly Blocks -->
     <xml id="toolbox" style="display: none" xmlns="https://developers.google.com/blockly/xml">
