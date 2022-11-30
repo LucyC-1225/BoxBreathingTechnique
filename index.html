@@ -157,6 +157,19 @@ Features to be implemented:
         background-color: lightgray;
         cursor: not-allowed;
       }
+      #rowContainer {
+        height: 10%;
+      }
+      #musicToggle {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        margin-right: 60px;
+        margin-bottom: 10px;
+        height: 5%;
+        width: auto;
+        cursor: pointer;
+      }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/9.1.0/blockly.min.js"></script>
     <script>
@@ -311,6 +324,25 @@ Features to be implemented:
           movedHorizontal = true;
         }
       }
+
+      //Music
+      let soundOn = false;
+      
+      function toggleSoundOnOff()  {
+        let musicToggle = document.getElementById("musicToggle");
+        let audio = document.getElementById("audio");
+        if (soundOn == true) {
+          musicToggle.src = "/images/musicOff.png";
+          soundOn = false;
+          audio.pause();
+          console.log("soundOn: ", soundOn);
+        } else if (soundOn == false) {
+          musicToggle.src = "/images/musicOn.png";
+          soundOn = true;
+          audio.play();
+          console.log("soundOn: ", soundOn);
+        }
+      }
     </script>
     
   </head>
@@ -320,8 +352,7 @@ Features to be implemented:
       <img id = "logo" src = "wellboticsLogo.png">
       <h1>The Box Breathing Technique</h1>
     </div>
-    <!-- Music -->
-    <audio hidden autoplay="true" loop="true" preload="auto">
+    <audio id = "audio" hidden autostart="false" preload="none" loop="true">
       <source src="calmquiet.mp3" type="audio/mp3">
     </audio>
     <!-- Blockly Workspace -->
@@ -359,6 +390,7 @@ Features to be implemented:
     </div>
     
     <button id = "aboutButton" onclick = "openPopup();">?</button>
+    <a onclick = "toggleSoundOnOff();"><img id = "musicToggle" src = "images/musicOff.png"></a>
     
     <!-- Adding the Blockly Blocks -->
     <xml id="toolbox" style="display: none" xmlns="https://developers.google.com/blockly/xml">
